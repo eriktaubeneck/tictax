@@ -4,6 +4,7 @@ import threading
 import time
 import urllib, urllib2
 import json
+die = False
 
 import app
 running = True
@@ -15,29 +16,33 @@ time.sleep(1)
 
 HOST = 'http://localhost:5000'
 
-resp = json.loads(urllib2.urlopen(HOST+'/play_request').read())
+def req(route, board=None):
+    if board:
+        return json.loads(urllib2.urlopen(
+            HOST+route,
+            data=urllib.urlencode({'data':json.dumps({'board':board})})).read())
+    else:
+        return json.loads(urllib2.urlopen(HOST+route, data=board).read())
+
+resp = req('/play_request')
 print resp
 
 player_number = resp['player1']
 board = resp['board']
 
 board[0] = 1
-resp = json.loads(urllib2.urlopen(
-    HOST+'/submit_board/'+str(player_number),
-    data=urllib.urlencode({'data':json.dumps({'board':board})})).read())
+resp = req('/submit_board/'+str(player_number), board=board)
 print resp
 
 assert resp['status'] == 'ok'
 
 print "SECOND PLAYER START"
-resp = json.loads(urllib2.urlopen(HOST+'/play_request').read())
+resp = req('/play_request')
 print resp
 player_number = resp['player2']
 board = resp['board']
 board[1] = -1
-resp = json.loads(urllib2.urlopen(
-    HOST+'/submit_board/'+str(player_number),
-    data=urllib.urlencode({'data':json.dumps({'board':board})})).read())
+resp = req('/submit_board/'+str(player_number), board=board)
 print resp
 
 assert resp['status'] == 'ok'

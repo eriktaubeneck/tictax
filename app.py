@@ -19,7 +19,6 @@ class GameState(object):
     def winner(self):
         pass
 
-
     @property
     def turn(self):
         print 'current turn is', [self.player1, self.player2][sum(self.board)]
