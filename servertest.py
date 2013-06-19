@@ -1,18 +1,15 @@
 """Mocks a tic tac toe client to test whether the server is working"""
-
 import threading
 import time
 import urllib, urllib2
 import json
-die = False
 
-import app
-running = True
+#import app
 
-t = threading.Thread(target=app.app.run)
-t.daemon = True
-t.start()
-time.sleep(1)
+#t = threading.Thread(target=app.app.run)
+#t.daemon = True
+#t.start()
+#time.sleep(1)
 
 HOST = 'http://localhost:5000'
 
@@ -23,6 +20,11 @@ def req(route, board=None):
             data=urllib.urlencode({'data':json.dumps({'board':board})})).read())
     else:
         return json.loads(urllib2.urlopen(HOST+route, data=board).read())
+
+def get_board():
+    resp = req('/get_board')
+    return resp['board']
+
 
 resp = req('/play_request')
 print resp

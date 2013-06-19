@@ -21,7 +21,6 @@ class GameState(object):
 
     @property
     def turn(self):
-        print 'current turn is', [self.player1, self.player2][sum(self.board)]
         return [self.player1, self.player2][sum(self.board)]
 
     def try_move(self, move):
@@ -49,8 +48,6 @@ def play_request():
 @app.route('/get_board/<int:player_id>')
 def get_board(player_id):
     (the_game,) = [g for g in games if player_id in [g.player1, g.player2]]
-    print 'requesting player id:', player_id
-    print 'current turn in the game associated with that player:', the_game.turn
     if the_game.turn == player_id:
         return the_game.json()
     else:
